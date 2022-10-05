@@ -1,0 +1,22 @@
+ejemplo1.c: In function ‘void gets_example_func()’:
+ejemplo1.c:34:16: error: return-statement with a value, in function returning ‘void’ [-fpermissive]
+   34 |         return 1;
+      |                ^
+ejemplo1.c: In function ‘const char* get_dirname(const char*)’:
+ejemplo1.c:41:18: error: invalid conversion from ‘const char*’ to ‘char*’ [-fpermissive]
+   41 |   slash = strrchr(pathname, '/');
+      |           ~~~~~~~^~~~~~~~~~~~~~~
+      |                  |
+      |                  const char*
+ejemplo1.c: In function ‘void get_y_or_n()’:
+ejemplo1.c:53:13: warning: ‘char* gets(char*)’ is deprecated [-Wdeprecated-declarations]
+   53 |         gets(response);
+      |         ~~~~^~~~~~~~~~
+In file included from ejemplo1.c:15:
+/usr/include/stdio.h:605:14: note: declared here
+  605 | extern char *gets (char *__s) __wur __attribute_deprecated__;
+      |              ^~~~
+ejemplo1.c: In function ‘int main(int, char**)’:
+ejemplo1.c:69:23: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+   69 |     char *ptr_char  = "new string literal";
+      |                       ^~~~~~~~~~~~~~~~~~~~
