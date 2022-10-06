@@ -1,0 +1,7 @@
+ejemplo1.c: In function ‘main’:
+ejemplo1.c:113:27: error: subscripted value is neither array nor pointer nor vector
+  113 |     printf("%s", array5[0][1]);
+      |                           ^
+ejemplo1.c:75:11: warning: unused variable ‘ptr_char’ [-Wunused-variable]
+   75 |     char *ptr_char  = "new string literal";
+      |           ^~~~~~~~

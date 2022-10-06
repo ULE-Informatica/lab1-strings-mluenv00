@@ -27,13 +27,16 @@ World
 )foo";
 const char* s2 = "\nHello\nWorld\n";
 
-void gets_example_func(void) {
+int gets_example_func(void) {
   char buf[BUFFER_MAX_SIZE];
  
   if (fgets(buf, sizeof(buf), stdin) == NULL) {
         return 1;
   }
+  
   buf[strlen(buf) - 1] = '\0';
+  
+ return 0;
 }
 
 const char *get_dirname(const char *pathname) {
@@ -50,8 +53,11 @@ void get_y_or_n(void) {
 	char response[8];
 
 	printf("Continue? [y] n: ");  
-	gets(response);
-
+	
+	//gets(response); // deprecated vulnerable function that should be replaced by fgets
+	
+	fgets(response,sizeof(response),stdin); // an alternative to use gets function
+	
 	if (response[0] == 'n') 
 		exit(0);  
 
@@ -66,13 +72,13 @@ int main(int argc, char *argv[])
     char array3[16];
     char array4[16];
     char array5 []  = "01234567890123456";
-    char *ptr_char  = "new string literal";
-    int size_array1 = strlen("аналитик");
-    int size_array2 = 100;
+    //char *ptr_char  = "new string literal"; // unused variable
+    //int size_array1 = strlen("аналитик"); // Unused variable, I should delete it.
+    //int size_array2 = 100; // Unused variable, I should delete it.
     
    // char analitic1[size_array1]="аналитик";
    // char analitic2[size_array2]="аналитик";
-    char analitic3[100]="аналитик";
+   // char analitic3[100]="аналитик"; // Unused variable, I should delete it.
 
     puts(get_dirname(__FILE__));
 
@@ -95,15 +101,20 @@ int main(int argc, char *argv[])
     printf ("\n");
     puts (s2);
     printf ("\n");
+
     
-    strncpy(array3, array5, sizeof(array3));  
-    strncpy(array4, array3, strlen(array3));
+    //strncpy(array3, array5, sizeof(array3));  // Fit the string to copy from array5 to strlen(array3):
+    strncpy(array3, array5, sizeof(array3)); 
     
-    array5 [0] = 'M';
-    ptr_char [0] = 'N';
+    //strncpy(array4, array3, strlen(array3)); // Fit to the dst array
+    strncpy(array4, array3,  strlen(array3)); 
+    
+    array5[0] = 'M'; 
+    //printf("%c", array5[0]);
+    
+    //*ptr_char[0] = 'N'; //invalid type assignation, ptr_char is a pointer that points to the first index of memory location array.
     
     array3[sizeof(array3)-1]='\0';
-    
     
     return 0;
 }

@@ -74,9 +74,9 @@ clang -> version 14.0.0-1ubuntu1
 
 	
 	
-  2.1- Tests using the g++ compiler:
+  2.2- Tests using the g++ compiler:
   
-  	2.1.0 - I try the following standards and flags:
+  	2.2.0 - I try the following standards and flags:
   		- No flags
   		- Wall Flag (Would be used with the following -std flags)
   		- std=c++98
@@ -86,12 +86,12 @@ clang -> version 14.0.0-1ubuntu1
 		- std=c++2a 
   		- std=gnu++11
   		
-  	2.1.1 - Compile the program with no flags enabled:
+  	2.2.1 - Compile the program with no flags enabled:
   		The compiler does not generates the binary file because the source code not verifies the standard requisites.
   		g++ ejemplo1.c -o g++_no_parameters 2> g++_no_parameters.txt
   		Output: /pruebas_ejemplo1/g++_no_parameters.txt
   	
-  	2.1.X - I used the following commands to compile with standards:
+  	2.2.X - I used the following commands to compile with standards:
   		
   		g++ ejemplo1.c -Wall -o g++_wall_no_parameters 2> g++_wall_no_parameters.txt
   		g++ ejemplo1.c -std=c++98 -o gcc_stdc++98_parameter 2> gcc_stdc++98_parameter.txt
@@ -104,9 +104,58 @@ clang -> version 14.0.0-1ubuntu1
 		generates the binary executables. Depending on the standard we use, the compiler throws diferent warnings and errors of deprecated 		 
 		functions and programming missuses are reflected in the file's traces located in the folder.
 
+  2.3- Tests using the clang compiler:
+  
+  2.4- Fixing all warnings to compile the code with gcc compiler (For example with std=gnu11 and -Wall Flags):
+  
+ 	- I obtain the following errors:
+ 	
+ 		1 - Non expected return value in a void function:
+ 	
+			ejemplo1.c:34:16: warning: ‘return’ with a value, in function returning void [-Wreturn-type]
+			   34 |         return 1;
+			   
+			- I fix it changing the expected return type of the function (void --> int)
+		
+	
+			ejemplo1.c:30:6: note: declared here
+		   	30 | void gets_example_func(void) {
+		      	|      ^~~~~~~~~~~~~~~~~
+			ejemplo1.c: In function ‘get_y_or_n’:
+		
+		2 - Deprecated function to read string from line input:
+		
+			ejemplo1.c:53:9: warning: implicit declaration of function ‘gets’; did you mean ‘fgets’? [-Wimplicit-function-declaration]
+			   53 |         gets(response);
+			      |         ^~~~
+			      |         fgets
+			      
+			- I fix it changing the deprecated function with the new implementation that have a new parameter to select the max buffer to read 	
+			(gets() --> fgets())
+			
+			
+		3 - Comment the unused variables:
+			
+			ejemplo1.c:75:10: warning: unused variable ‘analitic3’ [-Wunused-variable]
+			   75 |     char analitic3[100]="аналитик";
+			      |          ^~~~~~~~~
+			ejemplo1.c:71:9: warning: unused variable ‘size_array2’ [-Wunused-variable]
+			   71 |     int size_array2 = 100;
+			      |         ^~~~~~~~~~~
+			ejemplo1.c:70:9: warning: unused variable ‘size_array1’ [-Wunused-variable]
+			   70 |     int size_array1 = strlen("аналитик");
+			      |         ^~~~~~~~~~~
+
+  
   	
 
 ## ejemplo2.c. Program Instrumentation
 
 Find the memory errors presented in file ejemplo2 using gcc instrumentation option **AddressSanitizer (ASan)**.
 Explain in this file each error.
+
+
+
+
+
+
