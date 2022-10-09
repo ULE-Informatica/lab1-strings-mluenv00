@@ -154,6 +154,145 @@ clang -> version 14.0.0-1ubuntu1
 Find the memory errors presented in file ejemplo2 using gcc instrumentation option **AddressSanitizer (ASan)**.
 Explain in this file each error.
 
+There are 4 possible proccesed inputs in the program: 1,2,3,4:
+
+The asan commands are the following:
+
+	gcc ejemplo2.c -std=c17 -Wall -o ejemplo2_asan -fsanitize=address -static-libasan -g
+
+	./ejemplo2_asan 1 2> asan_parameter1.txt -> No memory leaks
+	
+	./ejemplo2_asan 2 2> asan_parameter2.txt -> memory leak:
+	
+		=================================================================
+		==20336==ERROR: LeakSanitizer: detected memory leaks
+
+		Direct leak of 100 byte(s) in 1 object(s) allocated from:
+		    #0 0x561a1827f0f7 in malloc (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x980f7)
+		    #1 0x561a182c4cf2 in optionTwo /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:15
+		    #2 0x561a182c50cc in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:64
+		    #3 0x7f2efee98d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+		SUMMARY: AddressSanitizer: 100 byte(s) leaked in 1 allocation(s).
+		=================================================================
+
+	
+	./ejemplo2_asan 3 2> asan_parameter3.txt -> heap use after call free function
+	
+=================================================================
+==20343==ERROR: AddressSanitizer: heap-use-after-free on address 0x60b0000000f0 at pc 0x564c22160b73 bp 0x7ffe458854b0 sp 0x7ffe45884c58
+WRITE of size 19 at 0x60b0000000f0 thread T0
+    #0 0x564c22160b72 in __interceptor_memcpy (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x1db72)
+    #1 0x564c22220d70 in optionThree /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:23
+    #2 0x564c222210d8 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:67
+    #3 0x7f707e759d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7f707e759e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #5 0x564c2214b3c4 in _start (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x83c4)
+
+0x60b0000000f0 is located 0 bytes inside of 100-byte region [0x60b0000000f0,0x60b000000154)
+freed by thread T0 here:
+    #0 0x564c221dada7 in free (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x97da7)
+    #1 0x564c22220d55 in optionThree /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:22
+    #2 0x564c222210d8 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:67
+    #3 0x7f707e759d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+previously allocated by thread T0 here:
+    #0 0x564c221db0f7 in malloc (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x980f7)
+    #1 0x564c22220d45 in optionThree /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:21
+    #2 0x564c222210d8 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:67
+    #3 0x7f707e759d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-use-after-free (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x1db72) in __interceptor_memcpy
+Shadow bytes around the buggy address:
+  0x0c167fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c167fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c167fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c167fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c167fff8000: fa fa fa fa fa fa fa fa fd fd fd fd fd fd fd fd
+=>0x0c167fff8010: fd fd fd fd fd fa fa fa fa fa fa fa fa fa[fd]fd
+  0x0c167fff8020: fd fd fd fd fd fd fd fd fd fd fd fa fa fa fa fa
+  0x0c167fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c167fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c167fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c167fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==20343==ABORTING
+=================================================================
+	
+	./ejemplo2_asan 4 2> asan_parameter4.txt -> heap overflow
+=================================================================
+==20381==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603000000052 at pc 0x55bab3a1cb73 bp 0x7ffff4f31b10 sp 0x7ffff4f312b8
+WRITE of size 19 at 0x603000000052 thread T0
+    #0 0x55bab3a1cb72 in __interceptor_memcpy (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x1db72)
+    #1 0x55bab3adcdc3 in optionFour /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:29
+    #2 0x55bab3add0e4 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:70
+    #3 0x7f4222371d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7f4222371e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #5 0x55bab3a073c4 in _start (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x83c4)
+
+0x603000000052 is located 0 bytes to the right of 18-byte region [0x603000000040,0x603000000052)
+allocated by thread T0 here:
+    #0 0x55bab3a970f7 in malloc (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x980f7)
+    #1 0x55bab3adcda4 in optionFour /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:28
+    #2 0x55bab3add0e4 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:70
+    #3 0x7f4222371d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x1db72) in __interceptor_memcpy
+Shadow bytes around the buggy address:
+  0x0c067fff7fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c067fff8000: fa fa 00 00 00 fa fa fa 00 00[02]fa fa fa fa fa
+  0x0c067fff8010: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==20381==ABORTING
+=================================================================
+
+
 
 
 
