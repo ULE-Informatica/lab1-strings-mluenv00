@@ -1,0 +1,11 @@
+
+=================================================================
+==20336==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 100 byte(s) in 1 object(s) allocated from:
+    #0 0x561a1827f0f7 in malloc (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x980f7)
+    #1 0x561a182c4cf2 in optionTwo /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:15
+    #2 0x561a182c50cc in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:64
+    #3 0x7f2efee98d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: 100 byte(s) leaked in 1 allocation(s).

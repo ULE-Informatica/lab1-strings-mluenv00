@@ -1,0 +1,51 @@
+=================================================================
+==20393==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603000000052 at pc 0x559cbbe13b73 bp 0x7ffd3627d700 sp 0x7ffd3627cea8
+WRITE of size 19 at 0x603000000052 thread T0
+    #0 0x559cbbe13b72 in __interceptor_memcpy (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x1db72)
+    #1 0x559cbbed3dc3 in optionFour /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:29
+    #2 0x559cbbed40e4 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:70
+    #3 0x7f9bc9d97d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7f9bc9d97e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #5 0x559cbbdfe3c4 in _start (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x83c4)
+
+0x603000000052 is located 0 bytes to the right of 18-byte region [0x603000000040,0x603000000052)
+allocated by thread T0 here:
+    #0 0x559cbbe8e0f7 in malloc (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x980f7)
+    #1 0x559cbbed3da4 in optionFour /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:28
+    #2 0x559cbbed40e4 in main /home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2.c:70
+    #3 0x7f9bc9d97d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/home/lab/Escritorio/DPS/lab1-strings-mluenv00/pruebas_ejemplo2/ejemplo2_asan+0x1db72) in __interceptor_memcpy
+Shadow bytes around the buggy address:
+  0x0c067fff7fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c067fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c067fff8000: fa fa 00 00 00 fa fa fa 00 00[02]fa fa fa fa fa
+  0x0c067fff8010: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c067fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==20393==ABORTING
